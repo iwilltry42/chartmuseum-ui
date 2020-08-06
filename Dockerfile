@@ -3,9 +3,6 @@
 #
 FROM library/golang:1 as builder
 
-# Godep for vendoring
-RUN go get github.com/tools/godep
-
 # Recompile the standard library without CGO
 RUN CGO_ENABLED=0 go install -a std
 
@@ -15,7 +12,7 @@ ADD . $APP_DIR
 
 # Compile the binary and statically link
 RUN cd $APP_DIR && \
-    CGO_ENABLED=0 godep go build -ldflags '-w -s' -o /chartmuseum-ui && \
+    CGO_ENABLED=0 go build -ldflags '-w -s' -o /chartmuseum-ui && \
     cp -r views/ /views && \
     cp -r static/ /static
 
